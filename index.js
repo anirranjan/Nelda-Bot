@@ -1,6 +1,8 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 require('dotenv').config();
+const cronJob = require('cron').CronJob;
+const { CronJob } = require('cron');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -13,7 +15,24 @@ for (const file of commandFiles){
     client.commands.set(command.name, command);
 }
 
-client.once('ready', () => {console.log('Ready!');});
+var challenge = fs.readFileSync('prompts.txt').toString().split("\n");
+
+client.once('ready', () => {
+    console.log('Ready!');
+
+    var job = new CronJob('0 14 * * *', function() {
+        const index = Math.floor(Math.random() * challenge.length);
+        var channel = client.channels.cache.get(process.env.CHANNEL_ID);
+        channel.send('Hello artists! Here\'s the modelling/drawing challenge of the day: ' + challenge[index] + '.');
+    }, null, true, 'America/Chicago');
+    job.start();
+    
+    // setInterval(() => {
+    //     const index = Math.floor(Math.random() * challenge.length);
+    //     var channel = client.channels.cache.get(process.env.CHANNEL_ID);
+    //     channel.send('Hello artists! Here\'s the modelling/drawing challenge of the day: ' + challenge[index] + '.');
+    // }, 3000)
+});
 
 client.on('message', async message => {
     if (!message.content.startsWith(process.env.PREFIX) || message.author.bot) return;
