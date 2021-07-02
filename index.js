@@ -22,7 +22,7 @@ client.once('ready', () => {
 
     var job = new CronJob('0 14 * * *', function() {
         const index = Math.floor(Math.random() * challenge.length);
-        var channel = client.channels.cache.get(process.env.CHANNEL_ID);
+        var channel = message.guild.channels.cache.find(ch => ch.name === "art-challenge-of-the-day");
         channel.send('Hello artists! Here\'s the modelling/drawing challenge of the day: ' + challenge[index] + '.');
     }, null, true, 'America/Chicago');
     job.start();
