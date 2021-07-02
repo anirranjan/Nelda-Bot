@@ -22,7 +22,7 @@ module.exports = {
             return message.channel.send(`No results found for **${args.join(' ')}**.`);
         }
 
-        const unsplashIndex = Math.floor(Math.random() * json.results.length);
+        const unsplashIndex = Math.floor(Math.random() * 10);
 
         const unsplashEmbed = new Discord.MessageEmbed()
             .setImage(json.results[unsplashIndex].urls.regular)
